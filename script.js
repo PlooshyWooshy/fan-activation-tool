@@ -1,5 +1,6 @@
 const canvas = new fabric.Canvas('canvas', {
-  selection: false
+  selection: false,
+  preserveObjectStacking: true
 });
 
 let userImg = null;
