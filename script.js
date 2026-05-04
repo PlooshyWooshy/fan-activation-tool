@@ -7,11 +7,11 @@ let userImg = null;
 let templateImg = null;
 let frameGuide = null;
 
-// 🎯 Frame presets for each template
+// 🎯 Frame presets — pixel-accurate, measured from actual template images (375x525px each)
 const FRAMES = {
-  "template1.png": { x: 260, y: 180, width: 560, height: 720 },
-  "template2.png": { x: 180, y: 140, width: 720, height: 820 },
-  "template3.png": { x: 300, y: 220, width: 520, height: 650 }
+  "template1.png": { x: 0, y: 0, width: 375, height: 371 },
+  "template2.png": { x: 0, y: 0, width: 375, height: 406 },
+  "template3.png": { x: 0, y: 0, width: 375, height: 406 }
 };
 
 let FRAME = FRAMES["template1.png"];
