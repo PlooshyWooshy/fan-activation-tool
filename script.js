@@ -8,8 +8,9 @@ let templateImg = null;
 let frameGuide = null;
 
 // 🎯 Frame presets — pixel-accurate, measured from actual template images (375x525px each)
+// template1 safe area matched to template2/3
 const FRAMES = {
-  "template1.png": { x: 0, y: 0, width: 375, height: 371 },
+  "template1.png": { x: 0, y: 0, width: 375, height: 406 },
   "template2.png": { x: 0, y: 0, width: 375, height: 406 },
   "template3.png": { x: 0, y: 0, width: 375, height: 406 }
 };
@@ -32,6 +33,29 @@ function enforceLayerOrder() {
 }
 
 
+// 🖼️ Auto-fit & center image inside the current FRAME, preserving aspect ratio (cover)
+function fitAndCenterImage(img) {
+  const scaleX = FRAME.width  / img.width;
+  const scaleY = FRAME.height / img.height;
+  // "cover" — scale up to the larger ratio so the frame is fully filled
+  const scale  = Math.max(scaleX, scaleY);
+
+  img.set({
+    scaleX: scale,
+    scaleY: scale,
+    left: FRAME.x + (FRAME.width  - img.width  * scale) / 2,
+    top:  FRAME.y + (FRAME.height - img.height * scale) / 2
+  });
+
+  // Sync zoom slider to the new scale
+  const slider = document.getElementById("zoom");
+  slider.min   = Math.min(parseFloat(slider.min), scale).toString();
+  slider.value = scale;
+
+  canvas.renderAll();
+}
+
+
 // 📤 Upload Image
 document.getElementById("upload").addEventListener("change", function(e) {
   const reader = new FileReader();
@@ -44,10 +68,6 @@ document.getElementById("upload").addEventListener("change", function(e) {
       userImg = img;
 
       img.set({
-        left: FRAME.x,
-        top: FRAME.y,
-        scaleX: 0.8,
-        scaleY: 0.8,
         selectable: true,
         hasControls: true
       });
@@ -62,6 +82,9 @@ document.getElementById("upload").addEventListener("change", function(e) {
       });
 
       canvas.add(img);
+
+      // 🎯 Auto-fit and center inside the safe area
+      fitAndCenterImage(img);
 
       // ✅ Always enforce correct layer order after adding user image
       enforceLayerOrder();
@@ -105,6 +128,9 @@ function setTemplate(src) {
         height: FRAME.height,
         absolutePositioned: true
       });
+
+      // 🎯 Re-fit and re-center for the new frame
+      fitAndCenterImage(userImg);
     }
 
     // ✅ Enforce layer order after template is set
