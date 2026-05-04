@@ -17,6 +17,21 @@ const FRAMES = {
 let FRAME = FRAMES["template1.png"];
 
 
+// ✅ Single source of truth for layer ordering:
+// userImg (bottom) → templateImg → frameGuide (top)
+function enforceLayerOrder() {
+  // Move all three to known positions using indices
+  if (userImg) canvas.sendToBack(userImg);
+  if (templateImg) {
+    canvas.bringToFront(templateImg);
+  }
+  if (frameGuide) {
+    canvas.bringToFront(frameGuide);
+  }
+  canvas.renderAll();
+}
+
+
 // 📤 Upload Image
 document.getElementById("upload").addEventListener("change", function(e) {
   const reader = new FileReader();
@@ -47,10 +62,9 @@ document.getElementById("upload").addEventListener("change", function(e) {
       });
 
       canvas.add(img);
-      canvas.sendToBack(img);
 
-      if (templateImg) templateImg.bringToFront();
-      if (frameGuide) frameGuide.bringToFront();
+      // ✅ Always enforce correct layer order after adding user image
+      enforceLayerOrder();
     });
   };
 
@@ -78,9 +92,7 @@ function setTemplate(src) {
     });
 
     templateImg = img;
-
     canvas.add(img);
-    canvas.bringToFront(img);
 
     drawFrameGuide();
 
@@ -94,6 +106,9 @@ function setTemplate(src) {
         absolutePositioned: true
       });
     }
+
+    // ✅ Enforce layer order after template is set
+    enforceLayerOrder();
   });
 }
 
@@ -117,7 +132,8 @@ function drawFrameGuide() {
 
   canvas.add(frameGuide);
 
-  if (templateImg) templateImg.bringToFront();
+  // ✅ Enforce layer order after frame guide is drawn
+  enforceLayerOrder();
 }
 
 
@@ -146,15 +162,14 @@ canvas.on('object:moving', function(e) {
     obj.top = FRAME.y + FRAME.height - objHeight;
   }
 
-  if (templateImg) templateImg.bringToFront();
-  if (frameGuide) frameGuide.bringToFront();
+  // ✅ Use enforceLayerOrder instead of ad-hoc bringToFront calls
+  enforceLayerOrder();
 });
 
 
-// 🔍 Keep Template Always on Top
+// 🔍 Keep Template Always on Top After Any Modification
 canvas.on('object:modified', function() {
-  if (templateImg) templateImg.bringToFront();
-  if (frameGuide) frameGuide.bringToFront();
+  enforceLayerOrder();
 });
 
 
@@ -165,7 +180,8 @@ document.getElementById("zoom").addEventListener("input", function(e) {
   const scale = parseFloat(e.target.value);
   userImg.scale(scale);
 
-  canvas.renderAll();
+  // ✅ Re-enforce layers after zoom since scaling can trigger re-renders
+  enforceLayerOrder();
 });
 
 
@@ -182,8 +198,12 @@ document.addEventListener('keydown', (e) => {
 });
 
 
-// 💾 Download Image
+// 💾 Download Image (hides frame guide for clean export)
 function download() {
+  // Temporarily hide the frame guide
+  if (frameGuide) frameGuide.set('visible', false);
+  canvas.renderAll();
+
   const link = document.createElement("a");
   link.download = "fan-card.png";
   link.href = canvas.toDataURL({
@@ -191,4 +211,8 @@ function download() {
     quality: 1
   });
   link.click();
+
+  // Restore frame guide visibility
+  if (frameGuide) frameGuide.set('visible', true);
+  canvas.renderAll();
 }
