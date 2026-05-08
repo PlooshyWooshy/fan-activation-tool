@@ -1,40 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HUGO BOSS x NHL Fan Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NHL Global Series: Germany | Digital Photobooth presented by Hugo Boss</title>
+  <meta name="description" content="Pick your side. Create your look. Share your moment from the NHL Global Series Germany." />
+  <meta name="theme-color" content="#000000" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css?v=2" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
+<body data-team="hugo">
 
-<div class="container">
-
-  <div class="controls">
-    <h1>#HUGOBOSSNHL</h1>
-
-    <input type="file" id="upload" accept="image/*">
-
-    <h3>Select Template</h3>
-    <div class="templates">
-      <img src="template1.png" onclick="setTemplate('template1.png')">
-      <img src="template2.png" onclick="setTemplate('template2.png')">
-      <img src="template3.png" onclick="setTemplate('template3.png')">
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-brand">Hugo Boss <span>×</span> NHL</a>
+      <a href="#photobooth" class="nav-cta">Start</a>
     </div>
+  </header>
 
-    <label>Zoom</label>
-    <input type="range" id="zoom" min="0.5" max="2" step="0.01">
+  <main>
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <img src="assets/global-series-logo.png" alt="NHL Global Series Germany — Hugo Boss" class="hero-logo" />
+        <h1 class="hero-title">Digital Photobooth.</h1>
+        <p class="hero-subtitle">Pick your team. Create your look.<br />Share the moment.</p>
+        <a href="#team" class="btn btn-primary">Start Photobooth</a>
+      </div>
+    </section>
 
-    <button onclick="download()">Download</button>
-  </div>
+    <!-- TEAM SELECTION -->
+    <section id="team" class="section">
+      <div class="section-head">
+        <span class="kicker">01 / Pick a Side</span>
+        <h2 class="section-title">Choose your team.</h2>
+      </div>
+      <div class="team-cards">
+        <button class="team-card" data-team="hugo" type="button">
+          <span class="team-eyebrow">Team</span>
+          <span class="team-name">Hugo</span>
+          <span class="team-tag">Bold · Modern</span>
+        </button>
+        <button class="team-card" data-team="boss" type="button">
+          <span class="team-eyebrow">Team</span>
+          <span class="team-name">Boss</span>
+          <span class="team-tag">Refined · Classic</span>
+        </button>
+      </div>
+    </section>
 
-  <div class="canvas-container">
-    <canvas id="canvas"></canvas>
-  </div>
+    <!-- PHOTOBOOTH -->
+    <section id="photobooth" class="section">
+      <div class="section-head">
+        <span class="kicker">02 / Create Your Look</span>
+        <h2 class="section-title">
+          <span id="boothTeamLabel" class="team-tint">Team Hugo</span> Photobooth
+        </h2>
+      </div>
 
-</div>
+      <div class="booth">
+        <div class="booth-stage">
+          <div class="stage-frame" id="stageFrame">
+            <canvas id="canvas"></canvas>
+            <div id="dropHint" class="drop-hint">
+              <div class="drop-hint-title">Tap to upload your photo</div>
+              <div class="drop-hint-sub">JPG · PNG</div>
+            </div>
+          </div>
+          <div class="stage-meta">
+            <span id="stageTeam">Team Hugo</span> · NHL Global Series Germany
+          </div>
+        </div>
 
-<script src="script.js"></script>
+        <aside class="booth-panel">
+          <div class="panel-row">
+            <div class="panel-label">Team</div>
+            <div class="team-toggle" role="tablist">
+              <button class="toggle-btn is-active" data-team="hugo" type="button">Hugo</button>
+              <button class="toggle-btn" data-team="boss" type="button">Boss</button>
+            </div>
+          </div>
+
+          <div class="panel-row">
+            <div class="panel-label">Photo</div>
+            <label for="upload" class="upload-drop" id="uploadDrop">
+              Choose Photo
+              <input type="file" id="upload" accept="image/*" hidden />
+            </label>
+          </div>
+
+          <div class="panel-row">
+            <div class="panel-label">
+              <span>Zoom</span>
+              <span id="zoomValue" class="panel-value">100%</span>
+            </div>
+            <input type="range" id="zoom" min="0.3" max="2.5" step="0.01" value="1" />
+          </div>
+
+          <div class="panel-actions">
+            <button id="resetBtn" class="btn btn-outline" type="button">Reset</button>
+            <button id="downloadBtn" class="btn btn-primary" type="button">Download</button>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hashtags">
+        <span>#TeamHugo</span>
+        <span>#TeamBoss</span>
+        <span>#HugoBossNHL</span>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section section-about">
+      <span class="kicker">The Activation</span>
+      <h2 class="section-title">From the arena<br />to your feed.</h2>
+      <p class="lead">
+        Step into the NHL Global Series Germany experience. Pick your side,
+        create a custom Hugo Boss × NHL keepsake, and share your moment.
+      </p>
+      <p class="muted">Powered by BossXP.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Hugo Boss <span>×</span> NHL</div>
+      <div class="footer-meta">
+        <span>© 2026 Hugo Boss × NHL</span>
+        <span>Global Series Germany Concept</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js?v=2"></script>
 </body>
 </html>

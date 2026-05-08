@@ -1,41 +1,559 @@
+/* ============================================================
+   NHL Global Series: Germany — Digital Photobooth
+   Hugo Boss × NHL · mobile-first
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0b0b0b;
-  color: white;
+  background: #000;
+  color: #fff;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.container {
+img  { max-width: 100%; display: block; }
+a    { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+::selection { background: #fff; color: #000; }
+
+/* ---------- Tokens ---------- */
+:root {
+  --bg:           #000;
+  --surface:      #0a0a0a;
+  --line:         rgba(255,255,255,0.10);
+  --line-strong:  rgba(255,255,255,0.20);
+  --text:         #fff;
+  --dim:          #a0a4ad;
+  --muted:        #6a6e77;
+  --blue:         #0064ff;
+  --red:          #d8232a;
+  --gold:         #c9a974;
+  --team-color:   var(--blue);
+}
+
+body[data-team="hugo"] { --team-color: var(--red);  }
+body[data-team="boss"] { --team-color: var(--gold); }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #000;
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 20px;
   display: flex;
-  height: 100vh;
-}
-
-.controls {
-  width: 300px;
-  padding: 20px;
-  background: #111;
-  border-right: 1px solid #222;
-}
-
-.templates img {
-  width: 80px;
-  margin: 5px;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.templates img:hover {
-  border: 2px solid white;
-}
-
-.canvas-container {
-  flex: 1;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.nav-brand {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.nav-brand span {
+  margin: 0 4px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.nav-cta {
+  display: inline-block;
+  padding: 9px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  background: #fff;
+  border-radius: 999px;
+  transition: background 0.15s;
+}
+.nav-cta:hover { background: #e8e8e8; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  padding: 56px 20px 72px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(100vh - 49px);
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 480px;
+  width: 100%;
+}
+.hero-logo {
+  width: clamp(180px, 56vw, 280px);
+  height: auto;
+}
+.hero-title {
+  font-size: clamp(2.25rem, 9vw, 3.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+}
+.hero-subtitle {
+  font-size: 0.95rem;
+  color: var(--dim);
+  margin: 0;
+  line-height: 1.55;
 }
 
-canvas {
-  max-width: 90%;
-  border: 1px solid #333;
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 28px;
+  min-height: 52px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-primary { background: #fff; color: #000; }
+.btn-primary:hover { background: #e8e8e8; }
+
+.btn-outline {
+  background: transparent;
+  color: #fff;
+  border-color: var(--line-strong);
+}
+.btn-outline:hover { border-color: #fff; }
+
+/* ============================================================
+   SECTION SCAFFOLDING
+   ============================================================ */
+.section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 64px 20px;
+}
+.section-head {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--team-color);
+  transition: color 0.3s;
+}
+.section-title {
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+.team-tint {
+  color: var(--team-color);
+  transition: color 0.3s;
+}
+
+/* ============================================================
+   TEAM CARDS
+   ============================================================ */
+.team-cards {
+  display: grid;
+  gap: 12px;
+}
+.team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 28px 24px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  text-align: left;
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.team-card:hover { border-color: var(--line-strong); }
+.team-card.is-selected { border-color: #fff; }
+
+.team-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.team-name {
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(3rem, 14vw, 4.5rem);
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+}
+.team-card[data-team="hugo"] .team-name { color: var(--red);  }
+.team-card[data-team="boss"] .team-name { color: var(--gold); }
+
+.team-tag {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ============================================================
+   PHOTOBOOTH
+   ============================================================ */
+.booth {
+  display: grid;
+  gap: 24px;
+}
+.booth-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stage-frame {
+  position: relative;
+  background: transparent;          /* canvas has its own white photo area */
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 375 / 525;
+  width: 100%;
+  cursor: pointer;
+}
+.stage-frame.has-image { cursor: default; }
+
+/* Fabric.js wraps the <canvas> in a fixed-pixel .canvas-container.
+   These rules + the JS sync in script.js force it to fill the frame. */
+.stage-frame > .canvas-container,
+.stage-frame > .canvas-container > canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* Drop hint sits inside the template's transparent photo area so the
+   branded team bar at the bottom stays visible behind it. */
+.drop-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 23%;            /* leave the team bar exposed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px;
+  z-index: 2;
+  pointer-events: none;
+  text-align: center;
+  color: #1a1a1a;
+  transition: opacity 0.25s;
+}
+.drop-hint.is-hidden { opacity: 0; }
+.drop-hint-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.drop-hint-sub {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6a6a6a;
+}
+
+.stage-meta {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Panel */
+.booth-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 20px;
+}
+.panel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.panel-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.panel-value {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Toggle */
+.team-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #050505;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px;
+}
+.toggle-btn {
+  padding: 11px 14px;
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle-btn:hover { color: var(--text); }
+.toggle-btn.is-active {
+  background: #fff;
+  color: #000;
+}
+
+/* Upload — slim inline button (the stage itself is the primary target) */
+.upload-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.upload-drop:hover,
+.upload-drop.is-drag {
+  border-color: #fff;
+  background: rgba(255,255,255,0.04);
+}
+
+/* Range */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.panel-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.panel-actions .btn {
+  padding: 14px 20px;
+  min-height: 48px;
+}
+
+.hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  justify-content: center;
+  margin-top: 32px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.section-about .lead {
+  font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+  color: var(--text);
+  line-height: 1.55;
+  margin: 24px 0 18px;
+  max-width: 600px;
+}
+.section-about .muted {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 20px;
+}
+.footer-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.footer-brand {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.footer-brand span {
+  margin: 0 4px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ============================================================
+   TABLET (>= 720px)
+   ============================================================ */
+@media (min-width: 720px) {
+  .nav-inner    { padding: 14px 28px; }
+  .nav-brand    { font-size: 13px; }
+
+  .section      { padding: 96px 28px; }
+  .section-head { margin-bottom: 44px; gap: 14px; }
+  .hero         { padding: 80px 28px 100px; }
+
+  .team-cards   { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .team-card    {
+    padding: 36px 32px;
+    min-height: 220px;
+    justify-content: space-between;
+  }
+
+  .booth        { gap: 32px; }
+
+  .footer-inner { flex-direction: row; justify-content: space-between; }
+}
+
+/* ============================================================
+   DESKTOP (>= 1000px)
+   ============================================================ */
+@media (min-width: 1000px) {
+  .section      { padding: 120px 32px; }
+  .section-head { margin-bottom: 56px; }
+  .hero         {
+    padding: 96px 32px 120px;
+    min-height: calc(100vh - 53px);
+  }
+
+  .booth {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 48px;
+    align-items: start;
+  }
+  .booth-stage  { gap: 20px; }
+  .stage-frame  { max-width: 540px; margin: 0 auto; }
+  .booth-panel  { position: sticky; top: 100px; }
+
+  .hashtags     { margin-top: 48px; gap: 24px; }
 }
